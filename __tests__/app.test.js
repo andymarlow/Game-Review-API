@@ -91,3 +91,24 @@ describe("GET review by id", () => {
       });
   });
 });
+
+describe("GET users", () => {
+  test("200: should respond an array of objects with the properties: username, name, avatar_url", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((res) => {
+        const users = res.body.users;
+        expect(Array.isArray(users)).toBe(true);
+        users.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+});
