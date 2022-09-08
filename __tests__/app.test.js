@@ -50,3 +50,44 @@ describe("GET categories", () => {
       });
   });
 });
+
+describe("GET review by id", () => {
+  test("200: should respond with an object that contains the relavant review properties", () => {
+    return request(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then((res) => {
+        expect(typeof res.body).toBe("object");
+        expect(res.body.review).toEqual(
+          expect.objectContaining({
+            review_id: 1,
+            title: "Agricola",
+            review_body: "Farmyard fun!",
+            designer: "Uwe Rosenberg",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            votes: 1,
+            category: "euro game",
+            owner: "mallionaire",
+            created_at: "2021-01-18T10:00:20.514Z",
+          })
+        );
+      });
+  });
+  test("404: should return a 404 error when an id is requested that does not exist", () => {
+    return request(app)
+      .get("/api/reviews/10000")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "Page/File Not Found" });
+      });
+  });
+  test("400: should return a 400 error when a bad request is made", () => {
+    return request(app)
+      .get("/api/reviews/NotAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "Invalid Input" });
+      });
+  });
+});
