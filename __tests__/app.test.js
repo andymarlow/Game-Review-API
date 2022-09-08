@@ -74,7 +74,7 @@ describe("GET review by id", () => {
         );
       });
   });
-  test("404: should return 404 error when an id is requested that does not exist", () => {
+  test("404: should return a 404 error when an id is requested that does not exist", () => {
     return request(app)
       .get("/api/reviews/10000")
       .expect(404)
@@ -82,7 +82,7 @@ describe("GET review by id", () => {
         expect(body).toEqual({ msg: "Page/File Not Found" });
       });
   });
-  test("400: should return 400 error when an id is requested that does not exist", () => {
+  test("400: should return a 400 error when a bad request is made", () => {
     return request(app)
       .get("/api/reviews/NotAnId")
       .expect(400)
