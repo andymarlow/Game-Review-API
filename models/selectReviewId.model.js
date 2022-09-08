@@ -1,10 +1,9 @@
 const db = require("../db/connection");
 
-exports.selectReviewId = (reviewToGet) => {
+exports.selectReviewId = (reviewId) => {
   return db
-    .query(`SELECT * FROM reviews WHERE review_id = $1;`, [reviewToGet])
+    .query(`SELECT * FROM reviews WHERE review_id = $1;`, [reviewId])
     .then(({ rows }) => {
-      console.log(rows);
       const review = rows[0];
       if (!review) {
         return Promise.reject({

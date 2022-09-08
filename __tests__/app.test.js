@@ -58,17 +58,18 @@ describe("GET review by id", () => {
       .expect(200)
       .then((res) => {
         expect(typeof res.body).toBe("object");
-        expect(res.body.reviewToSend).toEqual(
+        expect(res.body.review).toEqual(
           expect.objectContaining({
-            review_id: expect.any(Number),
-            title: expect.any(String),
-            review_body: expect.any(String),
-            designer: expect.any(String),
-            review_img_url: expect.any(String),
-            votes: expect.any(Number),
-            category: expect.any(String),
-            owner: expect.any(String),
-            created_at: expect.any(String),
+            review_id: 1,
+            title: "Agricola",
+            review_body: "Farmyard fun!",
+            designer: "Uwe Rosenberg",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            votes: 1,
+            category: "euro game",
+            owner: "mallionaire",
+            created_at: "2021-01-18T10:00:20.514Z",
           })
         );
       });
@@ -79,6 +80,14 @@ describe("GET review by id", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body).toEqual({ msg: "Page/File Not Found" });
+      });
+  });
+  test("400: should return 400 error when an id is requested that does not exist", () => {
+    return request(app)
+      .get("/api/reviews/NotAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "Invalid Input" });
       });
   });
 });
