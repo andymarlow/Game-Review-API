@@ -81,7 +81,6 @@ describe("GET review by id", () => {
       .then(({ body }) => {
         expect(body).toEqual({ msg: "Page/File Not Found" });
       });
-    //testing 400 below
   });
   test("400: should return a 400 error when a bad request is made", () => {
     return request(app)
