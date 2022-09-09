@@ -3,14 +3,20 @@ const express = require("express");
 const { pingApi } = require("./controllers/api.controller");
 const { getCategories } = require("./controllers/getCategories.controller");
 const { getReviewId } = require("./controllers/getReviewId.controller");
+const {
+  patchReviewVotes,
+} = require("./controllers/patchReviewVotes.controller");
 
 const app = express();
+app.use(express.json());
 
 app.get("/api", pingApi);
 
 app.get("/api/categories", getCategories);
 
 app.get("/api/reviews/:review_id", getReviewId);
+
+app.patch("/api/reviews/:review_id", patchReviewVotes);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Page/File Not Found" });

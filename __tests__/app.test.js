@@ -91,3 +91,65 @@ describe("GET review by id", () => {
       });
   });
 });
+
+describe("PATCH review votes", () => {
+  test("200: should accept an object in the form { inc_votes: newVote } and successfully update the database returning the updated review to the user when increasing vote count", () => {
+    const votesToPatch = { inc_votes: 6 };
+    return request(app)
+      .patch("/api/reviews/2")
+      .send(votesToPatch)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.updatedReview.votes).toBe(11);
+      });
+  });
+  test("200: should accept an object in the form { inc_votes: newVote } and successfully update the database returning the updated review to the user when decreasing vote count", () => {
+    const votesToPatch = { inc_votes: -4 };
+    return request(app)
+      .patch("/api/reviews/2")
+      .send(votesToPatch)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.updatedReview.votes).toBe(1);
+      });
+  });
+  test("200: the update should not change other properties or values on the review", () => {
+    const votesToPatch = { inc_votes: 6 };
+    return request(app)
+      .patch("/api/reviews/2")
+      .send(votesToPatch)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.updatedReview.title).toBe("Jenga");
+        expect(res.body.updatedReview.designer).toBe("Leslie Scott");
+        expect(res.body.updatedReview.owner).toBe("philippaclaire9");
+        expect(res.body.updatedReview.review_img_url).toBe(
+          "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        );
+        expect(res.body.updatedReview.review_body).toBe(
+          "Fiddly fun for all the family"
+        );
+        expect(res.body.updatedReview.category).toBe("dexterity");
+      });
+  });
+  test("404: should return a 404 error when a review id is requested that does not exist", () => {
+    const votesToPatch = { inc_votes: 6 };
+    return request(app)
+      .patch("/api/reviews/900000")
+      .send(votesToPatch)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "Page/File Not Found" });
+      });
+  });
+  test("400: Bad Request, should return a 400 error and Invalid Input message when text is used instead of a number", () => {
+    const votesToPatch = { inc_votes: 6 };
+    return request(app)
+      .patch("/api/reviews/NotANumber")
+      .send(votesToPatch)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "Invalid Input" });
+      });
+  });
+});
